@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1,
+    "title": "Teclado Mecánico RGB",
+    "description": "Teclado mecánico con retroiluminación RGB, switches azules.",
+    "code": "KB-RGB-001",
+    "price": 17000,
+    "status": true,
+    "stock": 300,
+    "category": "Periféricos",
+    "thumbnails": [
+      "img/teclado1.jpg",
+      "img/teclado1_2.jpg"
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Mouse Gamer Inalámbrico",
+    "description": "Mouse ergonómico inalámbrico con sensor óptico de alta precisión.",
+    "code": "MS-GAM-002",
+    "price": 12000,
+    "status": true,
+    "stock": 45,
+    "category": "Periféricos",
+    "thumbnails": [
+      "img/mouse1.jpg"
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Monitor LED 24'' Full HD",
+    "description": "Monitor LED de 24 pulgadas, resolución 1920x1080, HDMI y VGA.",
+    "code": "MON-HD-003",
+    "price": 45000,
+    "status": true,
+    "stock": 20,
+    "category": "Monitores",
+    "thumbnails": [
+      "img/monitor1.jpg"
+    ]
+  },
+  {
+    "id": 4,
+    "title": "Laptop Intel i5 11va Gen",
+    "description": "Notebook con procesador Intel Core i5, 8GB RAM y SSD de 256GB.",
+    "code": "NB-I5-004",
+    "price": 250000,
+    "status": true,
+    "stock": 10,
+    "category": "Laptops",
+    "thumbnails": [
+      "img/laptop1.jpg",
+      "img/laptop1_2.jpg"
+    ]
+  },
+  {
+    "id": 5,
+    "title": "Auriculares con Micrófono",
+    "description": "Auriculares estéreo con micrófono integrado y cable de 2m.",
+    "code": "AUD-MIC-005",
+    "price": 8000,
+    "status": true,
+    "stock": 60,
+    "category": "Audio",
+    "thumbnails": [
+      "img/auriculares1.jpg"
+    ]
+  },
+  {
+    "id": 6,
+    "title": "Disco SSD 1TB SATA III",
+    "description": "Unidad de estado sólido de 1TB, velocidad de lectura de 550MB/s.",
+    "code": "SSD-1TB-006",
+    "price": 60000,
+    "status": true,
+    "stock": 25,
+    "category": "Almacenamiento",
+    "thumbnails": [
+      "img/ssd1.jpg"
+    ]
+  },
+  {
+    "id": 7,
+    "title": "Memoria RAM 16GB DDR4",
+    "description": "Módulo de memoria RAM DDR4 de 16GB, 3200MHz.",
+    "code": "RAM-16GB-007",
+    "price": 22000,
+    "status": true,
+    "stock": 40,
+    "category": "Componentes",
+    "thumbnails": [
+      "img/ram1.jpg"
+    ]
+  },
+  {
+    "id": 8,
+    "title": "Placa de Video NVIDIA RTX 3060",
+    "description": "Tarjeta gráfica NVIDIA RTX 3060 12GB GDDR6.",
+    "code": "GPU-RTX3060-008",
+    "price": 350000,
+    "status": true,
+    "stock": 8,
+    "category": "Placas de Video",
+    "thumbnails": [
+      "img/gpu1.jpg",
+      "img/gpu1_2.jpg"
+    ]
+  },
+  {
+    "id": 10,
+    "title": "Fuente de Poder 650W 80+ Bronze",
+    "description": "Fuente certificada 80 Plus Bronze, ideal para gaming.",
+    "code": "PSU-650W-010",
+    "price": 25000,
+    "status": true,
+    "stock": 22,
+    "category": "Energía",
+    "thumbnails": [
+      "img/fuente1.jpg"
+    ]
+  }
+]
