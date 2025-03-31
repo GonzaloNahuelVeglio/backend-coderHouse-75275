@@ -118,5 +118,18 @@
     "thumbnails": [
       "img/fuente1.jpg"
     ]
+  },
+  {
+    "id": 11,
+    "title": "Producto test",
+    "description": "Descripción test",
+    "code": "TEST-123",
+    "price": 1000,
+    "status": true,
+    "stock": 5,
+    "category": "Test",
+    "thumbnails": [
+      "img/test.jpg"
+    ]
   }
 ]

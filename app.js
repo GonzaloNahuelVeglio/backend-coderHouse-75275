@@ -5,7 +5,7 @@ import productRoutes from './routes/productRoutes.js';
 
 const app = express();
 
-app.use(express.json()); // Para leer los cuerpos de las peticiones en JSON
+app.use(express.json());
 
 app.use('/api/products', productRoutes);
 app.use('/api/carts', cartRoutes);

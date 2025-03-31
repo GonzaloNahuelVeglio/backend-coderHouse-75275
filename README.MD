@@ -8,11 +8,12 @@ Este proyecto es una API backend para gestionar productos y carritos de compras.
 ## 📋 Tabla de Contenidos 
 
 - [✨ Características principales](#-características-principales)
-- [🛠️ Instalación](#️instalación)
+- [🛠️ Instalación](#-instalación)
 - [🚀 Scripts](#-scripts)
 - [📦 Dependencias](#-dependencias)
 - [📁 Estructura del Proyecto](#-estructura-del-proyecto)
 - [🌐 Endpoints de la API](#-endpoints-de-la-api)
+  - [Cómo usar `test.js`](#cómo-usar-testjs)
   - [📦 Rutas de Productos](#rutas-de-productos)
   - [🛒 Rutas de Carritos](#rutas-de-carritos)
 - [📝 Notas](#-notas)
@@ -78,9 +79,16 @@ Backend/
 
 ---
 
-## 🌐 API Endpoints
+## 🌐 Endpoints de la API
+Para realizar un testeo rápido del funcionamiento de los endpoints, se incluye un archivo llamado `test.js`. Este archivo ejecuta pruebas automatizadas que interactúan con las rutas de la API, verificando la creación, consulta, actualización y eliminación de productos y carritos. 
 
-### 📦 Product Routes
+### Cómo usar `test.js`
+1. Asegúrate de que el servidor esté corriendo en `http://localhost:8080`.
+2. Ejecuta el archivo con el siguiente comando:
+   ```bash
+   node test.js
+
+### 📦 Rutas de Productos
 
 Base URL: `/api/products`
 
@@ -94,7 +102,7 @@ Base URL: `/api/products`
 
 # Pruebas de Rutas
 
-## **Rutas de Productos (`/api/products`)**
+### **Rutas de Productos (`/api/products`)**
 
 1. **GET `/api/products`**
    - **Descripción**: Obtener todos los productos.
@@ -172,7 +180,7 @@ Base URL: `/api/products`
 ---
 
 
-### 🛒 Cart Routes
+### 🛒 Rutas de Carritos
 
 Base URL: `/api/carts`
 
@@ -182,7 +190,7 @@ Base URL: `/api/carts`
 | GET    | `/:cid`                      | Obtener carrito por ID                   |
 | POST   | `/:cid/product/:pid`         | Agregar producto a un carrito            |
 
-## **Rutas de Carritos (`/api/carts`)**
+### **Rutas de Carritos (`/api/carts`)**
 
 1. **POST `/api/carts`**
    - **Descripción**: Crear un nuevo carrito.
@@ -227,7 +235,7 @@ Base URL: `/api/carts`
 
 ---
 
-### 📝 Notas
+## 📝 Notas
 El proyecto utiliza archivos JSON (products.json y carts.json) para persistir los datos.
 
 Asegurarse de que la carpeta data/ exista y tenga permisos de escritura para que funcione correctamente.
