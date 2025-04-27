@@ -1,4 +1,4 @@
-import productManager from '../managers/ProductManager.js';
+import productManager from '../managers/productManager.js';
 
 const getProducts = (req, res) => {
   try {

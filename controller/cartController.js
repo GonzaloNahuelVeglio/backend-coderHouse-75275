@@ -1,4 +1,4 @@
- import cartManager from '../managers/CartManager.js';
+import cartManager from '../managers/CartManager.js';
 
 const createCart = (req, res) => {
   try {
@@ -8,7 +8,7 @@ const createCart = (req, res) => {
     res.status(500).json({ message: 'Error al crear el carrito', error: error.message });
   }
 };
-
+ 
 const getCartById = (req, res) => {
   try {
     const cart = cartManager.getCartById(parseInt(req.params.cid));

@@ -93,30 +93,12 @@
     ]
   },
   {
-    "id": 8,
-    "title": "Placa de Video NVIDIA RTX 3060",
-    "description": "Tarjeta gráfica NVIDIA RTX 3060 12GB GDDR6.",
-    "code": "GPU-RTX3060-008",
-    "price": 350000,
-    "status": true,
-    "stock": 8,
-    "category": "Placas de Video",
-    "thumbnails": [
-      "img/gpu1.jpg",
-      "img/gpu1_2.jpg"
-    ]
-  },
-  {
     "id": 10,
-    "title": "Fuente de Poder 650W 80+ Bronze",
-    "description": "Fuente certificada 80 Plus Bronze, ideal para gaming.",
-    "code": "PSU-650W-010",
-    "price": 25000,
-    "status": true,
-    "stock": 22,
-    "category": "Energía",
-    "thumbnails": [
-      "img/fuente1.jpg"
-    ]
+    "title": "Parlante",
+    "price": "444",
+    "code": "123asdaa12",
+    "description": "es un parlante",
+    "stock": "213",
+    "category": "audio"
   }
 ]

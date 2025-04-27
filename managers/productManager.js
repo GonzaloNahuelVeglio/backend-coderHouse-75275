@@ -1,11 +1,10 @@
-const path = './data/products.json';
 import fs from 'fs';
+const path = './data/products.json';
 
-class ProductManager {
+class productManager {
   constructor() {
     this.products = this.load();
   }
-
 
   load() {
     try {
@@ -20,7 +19,6 @@ class ProductManager {
     }
   }
 
-
   save() {
     try {
       fs.writeFileSync(path, JSON.stringify(this.products, null, 2));
@@ -28,7 +26,6 @@ class ProductManager {
       console.error('Error al guardar los productos:', error);
     }
   }
-
 
   getProducts() {
     return this.products;
@@ -48,7 +45,7 @@ class ProductManager {
       throw new Error(`Producto con ID ${id} no encontrado.`);
     }
 
-    // Actualizar el producto
+    
     const updatedFields = ['title', 'description', 'code', 'price', 'status', 'stock', 'category', 'thumbnails'];
     for (const field of updatedFields) {
       if (updatedProduct[field] !== undefined) {
@@ -61,38 +58,38 @@ class ProductManager {
     return this.products[productIndex];
   }
 
-  // Método para eliminar un producto por ID
+  
   deleteProduct(id) {
     const productIndex = this.products.findIndex((p) => p.id === parseInt(id));
     if (productIndex === -1) {
       throw new Error(`Producto con ID ${id} no encontrado.`);
     }
 
-    // Eliminar el producto
+    
     this.products.splice(productIndex, 1);
     console.log(`Producto con ID ${id} eliminado`);
     this.save();
   }
 
   
-  // Método para agregar un nuevo producto
   addProduct(product) {
-    const requiredFields = ['title', 'description', 'code', 'price', 'status', 'stock', 'category', 'thumbnails'];
+    // const requiredFields = ['title', 'description', 'code', 'price', 'statu s', 'stock', 'category', 'thumbnails'];
+    const requiredFields = ['title',  'price'];
 
-    // Verificar que todos los campos requeridos estén presentes
+    
     for (const field of requiredFields) {
       if (!product[field]) {
         throw new Error(`El campo "${field}" es obligatorio.`);
-      }
+      } 
     }
 
-    // Verificar que el código sea único
+    
     const existingProduct = this.products.find(p => p.code === product.code);
     if (existingProduct) {
       throw new Error(`El código "${product.code}" ya está en uso.`);
     }
 
-    // Crear el nuevo producto
+    
     const newId = this.products.length ? this.products[this.products.length - 1].id + 1 : 1;
     const newProduct = { id: newId, ...product };
     this.products.push(newProduct);
@@ -102,4 +99,4 @@ class ProductManager {
   }
 }
 
-export default new ProductManager();
+export default new productManager();

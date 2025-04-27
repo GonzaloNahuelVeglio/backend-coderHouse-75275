@@ -67,7 +67,7 @@ Backend/
 │   └── products.json
 ├── managers/
 │   ├── CartManager.js
-│   └── ProductManager.js
+│   └── productManager.js
 ├── routes/
 │   ├── cartRoutes.js
 │   └── productRoutes.js
