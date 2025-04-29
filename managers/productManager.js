@@ -46,7 +46,7 @@ class productManager {
     }
 
     
-    const updatedFields = ['title', 'description', 'code', 'price', 'status', 'stock', 'category', 'thumbnails'];
+    const updatedFields = ['title', 'description', 'code', 'price',  'stock', 'category', 'thumbnails'];
     for (const field of updatedFields) {
       if (updatedProduct[field] !== undefined) {
         this.products[productIndex][field] = updatedProduct[field];
@@ -73,23 +73,22 @@ class productManager {
 
   
   addProduct(product) {
-    // const requiredFields = ['title', 'description', 'code', 'price', 'statu s', 'stock', 'category', 'thumbnails'];
-    const requiredFields = ['title',  'price'];
-
-    
+    const requiredFields = ['title', 'description', 'code', 'price',  'stock', 'category', 'thumbnails'];
+  
+   
     for (const field of requiredFields) {
       if (!product[field]) {
         throw new Error(`El campo "${field}" es obligatorio.`);
-      } 
+      }
     }
-
-    
+  
+   
     const existingProduct = this.products.find(p => p.code === product.code);
     if (existingProduct) {
       throw new Error(`El código "${product.code}" ya está en uso.`);
     }
-
-    
+  
+   
     const newId = this.products.length ? this.products[this.products.length - 1].id + 1 : 1;
     const newProduct = { id: newId, ...product };
     this.products.push(newProduct);
@@ -97,6 +96,7 @@ class productManager {
     console.log(`Producto agregado:`, newProduct);
     return newProduct;
   }
+  
 }
 
 export default new productManager();

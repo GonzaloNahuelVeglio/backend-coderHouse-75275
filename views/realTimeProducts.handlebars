@@ -1,72 +1,120 @@
  <script>
    
 const socket = io();
-
+ 
+ 
 function addProduct() {
   Swal.fire({
     title: 'Agregar Producto',
     html: `
-      <input type="text" id="swal-title" class="swal2-input" placeholder="Título">
-      <input type="number" id="swal-price" class="swal2-input" placeholder="Precio">
-      <input type="text" id="swal-code" class="swal2-input" placeholder="Código del Producto">
-      <input type="text" id="swal-description" class="swal2-input" placeholder="Descripción del Producto">
-      <input type="number" id="swal-stock" class="swal2-input" placeholder="Stock del Producto">
-      <select id="swal-category" class="swal2-select">
-        <option value="">Seleccione una categoría</option>
-        <option value="perifericos">Periféricos</option> 
-        <option value="monitores">Monitores</option> 
-        <option value="laptops">Laptops</option> 
-        <option value="audio">Audio</option> 
-        <option value="almacenamiento">Almacenamiento</option> 
-        <option value="componentes">Componentes</option> 
-      </select>
+      <div class="bg-white p-6 rounded-lg shadow-md max-w-md mx-auto">
+        <div class="space-y-4">
+           
+          <div class="mb-4">
+            <label for="swal-title" class="block text-sm font-medium text-gray-700 mb-1">Título</label>
+            <input type="text" id="swal-title" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Título del producto">
+          </div>
+
+           
+          <div class="mb-4">
+            <label for="swal-price" class="block text-sm font-medium text-gray-700 mb-1">Precio</label>
+            <input type="number" id="swal-price" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="0.00">
+          </div>
+
+           
+          <div class="mb-4">
+            <label for="swal-code" class="block text-sm font-medium text-gray-700 mb-1">Código del Producto</label>
+            <input type="text" id="swal-code" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Ej: TECH-001">
+          </div>
+
+           
+          <div class="mb-4">
+            <label for="swal-description" class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+            <textarea id="swal-description" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Descripción detallada del producto"></textarea>
+          </div>
+
+           
+          <div class="mb-4">
+            <label for="swal-stock" class="block text-sm font-medium text-gray-700 mb-1">Stock</label>
+            <input type="number" id="swal-stock" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Cantidad disponible">
+          </div>
+
+           
+          <div class="mb-4">
+            <label for="swal-category" class="block text-sm font-medium text-gray-700 mb-1">Categoría</label>
+            <select id="swal-category" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white">
+              <option value="">Seleccione una categoría</option>
+              <option value="perifericos">Periféricos</option> 
+              <option value="monitores">Monitores</option> 
+              <option value="laptops">Laptops</option> 
+              <option value="audio">Audio</option> 
+              <option value="almacenamiento">Almacenamiento</option> 
+              <option value="componentes">Componentes</option>
+            </select>
+          </div>
+
+           
+          <div class="mb-4">
+            <label for="swal-image" class="block text-sm font-medium text-gray-700 mb-1">Imagen del Producto</label>
+            <input type="file" id="swal-image" class="swal2-input" accept="image/jpeg, image/webp" />
+          </div>
+          
+        </div>
+      </div>
     `,
     confirmButtonText: 'Agregar',
     showCancelButton: true,
     cancelButtonText: 'Cancelar',
     preConfirm: () => {
-      // Recoger todos los valores de los inputs
       const title = document.getElementById('swal-title').value;
       const price = document.getElementById('swal-price').value;
       const code = document.getElementById('swal-code').value;
       const description = document.getElementById('swal-description').value;
       const stock = document.getElementById('swal-stock').value;
       const category = document.getElementById('swal-category').value;
+      const imageFile = document.getElementById('swal-image').files[0];
 
-      // Validación de campos
-      if (!title || !price || !code || !description || !stock || !category) {
+      if (!title || !price || !code || !description || !stock || !category || !imageFile) {
         Swal.showValidationMessage('Todos los campos son obligatorios');
         return false;
       }
 
-      // Retornar el objeto con todos los datos del producto
-      return { title, price, code, description, stock, category };
+       
+      const formData = new FormData();
+      formData.append('image', imageFile);
+
+      return fetch('/uploadImage', {
+        method: 'POST',
+        body: formData
+      })
+        .then(response => response.json())
+        .then(data => {
+          const imagePath = data.imagePath;  
+          return { title, price, code, description, stock, category, thumbnails: imagePath };
+        })
+        .catch(err => Swal.showValidationMessage('Error al subir la imagen: ' + err));
     }
   }).then((result) => {
     if (result.isConfirmed) {
-      // Obtener los valores retornados y emitirlos al servidor
-      const { title, price, code, description, stock, category } = result.value;
-      socket.emit('addProduct', { title, price, code, description, stock, category });
-
-      // Mostrar mensaje de éxito
+      const product = result.value;
+      socket.emit('addProduct', product);
       Swal.fire('Éxito', 'Producto agregado correctamente', 'success');
     }
   });
 }
 
 
-function createProduct() {
-  const title = document.getElementById('title').value;
-  const price = document.getElementById('price').value;
-  const code = document.getElementById('code').value;
-  if (!title || !price || !code) {
-    Swal.fire('Error', 'Todos los campos son obligatorios', 'error');
-    return;
-  }
-  socket.emit('addProduct', { title, price, code });
-  Swal.fire('Éxito', 'Producto agregado correctamente', 'success');
-}
 
+
+function alertEdit(){
+      Swal.fire({
+      title: "En construcción!",
+      text: "Estamos trabajando para mejorar nuestros.",
+      icon: "success"
+    });
+
+  } 
+ 
 function deleteProduct(id) {
   Swal.fire({
   title: "¿Desea eliminar el producto?",
@@ -90,22 +138,29 @@ function deleteProduct(id) {
 }
 
 function limpiarFormulario() {
-  document.getElementById('title').value = '';
-  document.getElementById('price').value = '';
-  document.getElementById('code').value = '';
-} 
+   
+  setTimeout(() => {
+    const fields = ['title', 'price', 'code', 'description', 'stock', 'category', 'thumbnails'];
+    fields.forEach(field => {
+      const input = document.getElementById(`swal-${field}`);
+      if (input) input.value = '';  
+    });
+  }, 500);  
+}
+
+
 
 socket.on('updateProducts', (products) => {
   const productList = document.getElementById('product-list');
   productList.innerHTML = `
-    <thead>
-      <tr> 
-        <th>Título</th>
-        <th>Precio</th>
-        <th>Stock</th>
-        <th>Categoria</th>
-        <th>Descripcion</th>
-        <th>Acciones</th>
+    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+      <tr>
+        <th class="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider">Título</th>
+        <th class="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider">Precio</th>
+        <th class="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider">Stock</th>
+        <th class="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider">Categoria</th>
+        <th class="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider">Descripcion</th>
+        <th class="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider">Acciones</th>
       </tr>
     </thead>
     <tbody>
@@ -115,15 +170,39 @@ socket.on('updateProducts', (products) => {
   const tbody = productList.querySelector('tbody');
   products.forEach(product => {
     tbody.innerHTML += `
-      <tr> 
-        <td>${product.title}</td>
-        <td>$${product.price}</td>
-        <td>${product.stock}</td>
-        <td>${product.category}</td>
-        <td>${product.description}</td>
+      <tr class="hover:bg-gray-50 hover:bg-gray-50 dark:hover:bg-gray-600"> 
+        <td class="px-6 py-4 text-sm text-gray-500 ">${product.title}</td>
+        <td class="px-6 py-4 text-sm text-gray-500 ">$${product.price}</td>
+        <td class="px-6 py-4 text-sm text-gray-500 ">${product.stock}</td>
+        <td class="px-6 py-4 text-sm text-gray-500 ">${product.category}</td>
+        <td class="px-6 py-4 text-sm text-gray-500 ">${product.description}</td>
 
-        <td>
-          <button onclick="deleteProduct(${product.id})">Eliminar</button>
+        <td class="px-6 py-4 text-sm text-gray-500 ">
+       
+       
+       
+                    <div class="inline-flex rounded-md shadow-xs" role="group">
+
+
+                      <div class="inline-flex rounded-md shadow-xs" role="group">
+                        <button onclick="deleteProduct({{this.id}})" type="button" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-s-lg hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700">
+                          <svg class="w-6 h-6   dark:text-white" aria-hidden="true" xmlns="http: 
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
+                          </svg>
+
+                          Eliminar
+                        </button> 
+                        <button  onclick="alertEdit()"  type="button" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-e-lg hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-900 dark:focus:bg-gray-700">
+                          <svg class="w-6 h-6   dark:text-white" aria-hidden="true" xmlns="http: 
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"/>
+                          </svg>
+
+                          Editar
+                        </button>
+                      </div>
+
+
+
         </td>
       </tr>
     `;
@@ -137,11 +216,11 @@ socket.on('updateProducts', (products) => {
     <h1 class="mb-4 text-4xl font-extrabold leading-none text-center tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">Productos</h1>
  
  
-    <!-- Tabla de productos -->
-    <button onclick="addProduct()"  type="button" class="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"">Agregar producto</button>
+     
+    <button onclick="addProduct()"  type="button" class="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Agregar producto</button>
       <div class=" shadow-lg rounded-xl overflow-hidden mt-4">
 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+    <table id="product-list"  class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th class="px-6 py-3 text-left text-sm font-medium uppercase tracking-wider">ID</th>
@@ -157,12 +236,30 @@ socket.on('updateProducts', (products) => {
                 <td class="px-6 py-4 text-sm text-gray-500 ">{{this.title}}</td>
                 <td class="px-6 py-4 text-sm text-gray-500 ">$ {{this.price}}</td>
                 <td class="px-6 py-4 text-sm text-gray-500 ">
-                <button onclick="deleteProduct({{this.id}})" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400">
-                  <i class="fa-solid fa-trash"></i> Eliminar
-                </button>
-                <button onclick="editProduct({{this.id}})" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400">
-                  <i class="fa-solid fa-pen-to-square"></i> Editar
-                </button>
+
+                    <div class="inline-flex rounded-md shadow-xs" role="group">
+
+
+                      <div class="inline-flex rounded-md shadow-xs" role="group">
+                        <button onclick="deleteProduct({{this.id}})" type="button" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-s-lg hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-100">
+<svg class="w-6 h-6   dark:text-white" aria-hidden="true" xmlns="http: 
+  <path fill-rule="evenodd" d="M8.586 2.586A2 2 0 0 1 10 2h4a2 2 0 0 1 2 2v2h3a1 1 0 1 1 0 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8a1 1 0 0 1 0-2h3V4a2 2 0 0 1 .586-1.414ZM10 6h4V4h-4v2Zm1 4a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Zm4 0a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Z" clip-rule="evenodd"/>
+</svg>
+<svg class="w-6 h-6   dark:text-white" aria-hidden="true" xmlns="http: 
+  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
+</svg>
+
+                          Eliminar
+                        </button> 
+                        <button  onclick="alertEdit()"  type="button" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-e-lg hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700">
+                          <svg class="w-3 h-3 me-2" aria-hidden="true" xmlns="http: 
+                            <path d="M14.707 7.793a1 1 0 0 0-1.414 0L11 10.086V1.5a1 1 0 0 0-2 0v8.586L6.707 7.793a1 1 0 1 0-1.414 1.414l4 4a1 1 0 0 0 1.416 0l4-4a1 1 0 0 0-.002-1.414Z"/>
+                            <path d="M18 12h-2.55l-2.975 2.975a3.5 3.5 0 0 1-4.95 0L4.55 12H2a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2Zm-3 5a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"/>
+                          </svg>
+                          Editar
+                        </button>
+                      </div>
+
 
                 </td>
               </tr>
