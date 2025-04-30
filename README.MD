@@ -1,235 +1,136 @@
-# Documentación de la API Backend
-![Status](https://img.shields.io/badge/estado-en%20desarrollo-green)
-![Version](https://img.shields.io/badge/versión-1.0.0-blue)
-![Node](https://img.shields.io/badge/node-%3E%3D%2014.0.0-brightgreen)
+# 🛒 Backend CoderHouse 75275
 
-Este proyecto es una API backend para gestionar productos y carritos de compras. Está construido utilizando Node.js y Express, con una estructura modular para escalabilidad y mantenibilidad.
-
-## 📋 Tabla de Contenidos 
-
-- [✨ Características principales](#-características-principales)
-- [🛠️ Instalación](#️instalación)
-- [🚀 Scripts](#-scripts)
-- [📦 Dependencias](#-dependencias)
-- [📁 Estructura del Proyecto](#-estructura-del-proyecto)
-- [🌐 Endpoints de la API](#-endpoints-de-la-api)
-  - [📦 Rutas de Productos](#rutas-de-productos)
-  - [🛒 Rutas de Carritos](#rutas-de-carritos)
-- [📝 Notas](#-notas)
+Este proyecto es una aplicación backend diseñada para gestionar un catálogo de productos y carritos de compras. Incluye funcionalidades como visualización de productos, adición y eliminación en tiempo real mediante **WebSockets**, y un diseño moderno utilizando **TailwindCSS** y **Handlebars** como motor de plantillas.
 
 ---
 
-## ✨ Características principales
+## 🚀 Funcionalidades
 
-- Gestión completa de productos (CRUD)
-- Administración de carritos de compra
-- Persistencia de datos en archivos JSON
-- Arquitectura modular para fácil extensión
+### Productos
+- **Visualización**: Lista de productos con detalles como título, precio, descripción, categoría y stock.
+- **Adición**: Agregar nuevos productos con validación de campos.
+- **Eliminación**: Eliminar productos en tiempo real.
+- **Edición**: (En construcción) Modificar productos existentes.
 
+### Carrito de Compras
+- **Creación de carritos**: Generar nuevos carritos vacíos.
+- **Gestión de productos en el carrito**: (En construcción) Añadir productos al carrito.
 
-
-## 🛠️ Instalación
-
-1. Instalar las dependencias:
-     ```bash
-     npm install
-     ```
-
----
-
-## 🚀 Scripts
-
-- Iniciar el servidor de desarrollo con recarga automática:
-    ```bash
-    npm run dev
-    ```
+### Tiempo Real
+- **WebSockets**: Implementación de **Socket.IO** para actualizar la lista de productos en tiempo real.
 
 ---
 
-## 📦 Dependencias
+## 🛠️ Tecnologías Utilizadas
 
-- **express**: Framework web para construir APIs.
-- **nodemon**: Herramienta de desarrollo para reiniciar automáticamente el servidor al cambiar archivos.
-
-Para la lista completa de dependencias, consulta el archivo `package.json`.
+- **Backend**: Node.js, Express.js
+- **Frontend**: Handlebars, TailwindCSS
+- **WebSockets**: Socket.IO
+- **Gestión de Archivos**: Multer para subir imágenes.
+- **Base de Datos**: Archivos JSON simulando persistencia.
 
 ---
 
-## 📁 Estructura del Proyecto
+## 📂 Estructura del Proyecto
 
-```
-Backend/
-├── controller/
-│   ├── cartController.js
-│   └── productController.js
-├── data/
-│   ├── carts.json
-│   └── products.json
-├── managers/
-│   ├── CartManager.js
-│   └── productManager.js
-├── routes/
-│   ├── cartRoutes.js
-│   └── productRoutes.js
-├── app.js
-├── package.json
-└── README.md
+```plaintext
+backend-coderHouse-75275/
+├── app.js                     # Configuración principal del servidor
+├── socketHandler.js           # Gestión de eventos WebSocket
+├── controllers/               # Controladores de lógica de negocio
+│   ├── cartController.js      # Controlador para carritos
+│   └── productController.js   # Controlador para productos
+├── managers/                  # Gestión de datos
+│   ├── cartManager.js         # Lógica para carritos
+│   └── productManager.js      # Lógica para productos
+├── routes/                    # Rutas de la API y vistas
+│   ├── cartRoutes.js          # Rutas para carritos
+│   ├── productRoutes.js       # Rutas para productos
+│   └── viewsRoutes.js         # Rutas para vistas
+├── views/                     # Plantillas Handlebars
+│   ├── layouts/
+│   │   └── main.handlebars    # Layout principal
+│   ├── home.handlebars        # Página de inicio
+│   ├── productPage.handlebars # Detalle de producto
+│   └── realTimeProducts.handlebars # Gestión en tiempo real
+├── data/                      # Archivos JSON simulando base de datos
+│   ├── carts.json             # Datos de carritos
+│   └── products.json          # Datos de productos
+├── public/                    # Archivos estáticos
+│   └── images/                # Imágenes subidas
+├── .gitignore                 # Archivos ignorados por Git
+├── package.json               # Dependencias y scripts
+└── README.MD                  # Documentación del proyecto
 ```
 
 ---
 
-## 🌐 API Endpoints
+## 🌐 Rutas Principales
 
-### 📦 Product Routes
+### API de Productos
+- `GET /api/products`: Obtener todos los productos.
+- `GET /api/products/:pid`: Obtener un producto por ID.
+- `POST /api/products`: Agregar un nuevo producto.
+- `PUT /api/products/:pid`: (En construcción) Modificar un producto.
+- `DELETE /api/products/:pid`: Eliminar un producto.
 
-Base URL: `/api/products`
+### API de Carritos
+- `POST /api/carts`: Crear un nuevo carrito.
+- `GET /api/carts/:cid`: Obtener un carrito por ID.
+- `POST /api/carts/:cid/product/:pid`: (En construcción) Agregar un producto al carrito.
 
-| Method | Endpoint         | Description                     |
-|--------|------------------|---------------------------------|
-| GET    | `/`              | Obtener todos los productos    |
-| GET    | `/:pid`          | Obtener producto por ID        |
-| POST   | `/`              | Agregar nuevo producto         |
-| PUT    | `/:pid`          | Actualizar producto por ID     |
-| DELETE | `/:pid`          | Eliminar producto por ID       |
-
-# Pruebas de Rutas
-
-## **Rutas de Productos (`/api/products`)**
-
-1. **GET `/api/products`**
-   - **Descripción**: Obtener todos los productos.
-   - **Método**: GET
-   - **URL**: `http://localhost:8080/api/products`
-   - **Resultado esperado**: Un arreglo con los productos (vacío si no has agregado ninguno).
-
-2. **POST `/api/products`**
-   - **Descripción**: Crear un nuevo producto.
-   - **Método**: POST
-   - **URL**: `http://localhost:8080/api/products`
-   - **Cuerpo de la solicitud (Body)**:
-     ```json
-     {
-       "title": "Producto 3",
-       "description": "Descripción 3",
-       "price": 300,
-       "stock": 15
-     }
-     ```
-   - **Resultado esperado**: Un objeto JSON con el producto creado y un ID autogenerado:
-     ```json
-     {
-       "id": 3,
-       "title": "Producto 3",
-       "description": "Descripción 3",
-       "price": 300,
-       "stock": 15
-     }
-     ```
-
-3. **GET `/api/products/:pid`**
-   - **Descripción**: Obtener un producto por su ID.
-   - **Método**: GET
-   - **URL**: `http://localhost:8080/api/products/3` (reemplazar `3` con el ID del producto que quieres consultar).
-   - **Resultado esperado**: El producto con el ID especificado:
-     ```json
-     {
-       "id": 3,
-       "title": "Producto 3",
-       "description": "Descripción 3",
-       "price": 300,
-       "stock": 15
-     }
-     ```
-
-4. **PUT `/api/products/:pid`**
-   - **Descripción**: Actualizar un producto por su ID.
-   - **Método**: PUT
-   - **URL**: `http://localhost:8080/api/products/3` (reemplazar `3` con el ID del producto que deseas actualizar).
-   - **Cuerpo de la solicitud (Body)**:
-     ```json
-     {
-       "price": 350,
-       "stock": 20
-     }
-     ```
-   - **Resultado esperado**: El producto actualizado con los nuevos datos:
-     ```json
-     {
-       "id": 3,
-       "title": "Producto 3",
-       "description": "Descripción 3",
-       "price": 350,
-       "stock": 20
-     }
-     ```
-
-5. **DELETE `/api/products/:pid`**
-   - **Descripción**: Eliminar un producto por su ID.
-   - **Método**: DELETE
-   - **URL**: `http://localhost:8080/api/products/3` (reemplazar `3` con el ID del producto que deseas eliminar).
-   - **Resultado esperado**: Un mensaje de éxito o el producto eliminado.
+### Vistas
+- `/`: Página principal con lista de productos.
+- `/product/:id`: Detalle de un producto.
+- `/realtimeproducts`: Gestión de productos en tiempo real.
 
 ---
 
+## 🎨 Diseño
 
-### 🛒 Cart Routes
-
-Base URL: `/api/carts`
-
-| Method | Endpoint                     | Description                          |
-|--------|------------------------------|--------------------------------------|
-| POST   | `/`                          | Crear un nuevo carrito                   |
-| GET    | `/:cid`                      | Obtener carrito por ID                   |
-| POST   | `/:cid/product/:pid`         | Agregar producto a un carrito            |
-
-## **Rutas de Carritos (`/api/carts`)**
-
-1. **POST `/api/carts`**
-   - **Descripción**: Crear un nuevo carrito.
-   - **Método**: POST
-   - **URL**: `http://localhost:8080/api/carts`
-   - **Resultado esperado**: Un objeto JSON con el carrito creado, por ejemplo:
-     ```json
-     {
-       "id": 1,
-       "products": []
-     }
-     ```
-
-2. **GET `/api/carts/:cid`**
-   - **Descripción**: Obtener un carrito por su ID.
-   - **Método**: GET
-   - **URL**: `http://localhost:8080/api/carts/1` (reemplazar `1` con el ID del carrito que quieres consultar).
-   - **Resultado esperado**: El carrito con el ID especificado. Si es nuevo, estará vacío:
-     ```json
-     {
-       "id": 1,
-       "products": []
-     }
-     ```
-
-3. **POST `/api/carts/:cid/product/:pid`**
-   - **Descripción**: Agregar un producto a un carrito existente.
-   - **Método**: POST
-   - **URL**: `http://localhost:8080/api/carts/1/product/3` (reemplazar `1` con el ID del carrito y `3` con el ID del producto que deseas agregar).
-   - **Resultado esperado**: El carrito actualizado con el producto agregado:
-     ```json
-     {
-       "id": 1,
-       "products": [
-         {
-           "id": 3,
-           "quantity": 1
-         }
-       ]
-     }
-     ```
+- **Frontend**: Utiliza **TailwindCSS** para un diseño moderno y responsivo.
+- **Plantillas**: **Handlebars** permite la reutilización de componentes y layouts.
+- **Interactividad**: **SweetAlert2** para modales interactivos y alertas.
 
 ---
 
-### 📝 Notas
-El proyecto utiliza archivos JSON (products.json y carts.json) para persistir los datos.
+## ⚙️ Instalación y Uso
 
-Asegurarse de que la carpeta data/ exista y tenga permisos de escritura para que funcione correctamente.
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/tu-usuario/backend-coderHouse-75275.git
+   cd backend-coderHouse-75275
+   ```
 
----  
+2. Instala las dependencias:
+   ```bash
+   npm install
+   ```
+
+3. Inicia el servidor:
+   ```bash
+   npm run dev
+   ```
+
+4. Accede a la aplicación en [http://localhost:8080](http://localhost:8080).
+
+---
+
+## 🧩 Mejoras Futuras
+
+- Implementar la funcionalidad de edición de productos.
+- Añadir productos al carrito y gestionar cantidades.
+- Integrar una base de datos real como MongoDB o MySQL.
+- Mejorar la validación de datos en el backend.
+
+---
+
+## 📜 Licencia
+
+Este proyecto está bajo la licencia **MIT**. Puedes usarlo, modificarlo y distribuirlo libremente.
+
+---
+
+## ✨ Autor
+
+Desarrollado por [Gonzalo Nahuel Veglio](https://www.linkedin.com/in/gonzalo-nahuel-veglio/). Si tienes alguna pregunta o sugerencia, no dudes en contactarme.
