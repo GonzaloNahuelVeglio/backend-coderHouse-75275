@@ -98,7 +98,7 @@ backend-coderHouse-75275/
 
 1. Clona el repositorio:
    ```bash
-   git clone https://github.com/tu-usuario/backend-coderHouse-75275.git
+   git clone https://github.com/GonzaloNahuelVeglio/backend-coderHouse-75275.git
    cd backend-coderHouse-75275
    ```
 
