@@ -1,5 +1,6 @@
 import fs from 'fs';
 const path = './data/products.json';
+import Product from '../models/products.js';
 
 class productManager {
   constructor() {
@@ -27,9 +28,40 @@ class productManager {
     }
   }
 
-  getProducts() {
-    return this.products;
-  }
+   getProducts =   (limit = 10, page = 1, query = {}, sort = 'asc') => {
+    try {
+      const filter = {}; // Filtro de búsqueda (por ejemplo, categoría o disponibilidad)
+      if (query.category) {
+        filter.category = query.category;
+      }
+      if (query.available) {
+        filter.stock = { $gt: 0 }; // Filtrar solo productos disponibles
+      }
+  
+      const products =   Product.find(filter)
+        .skip((page - 1) * limit) // Paginación
+        .limit(Number(limit))     // Límite de productos por página
+        .sort({ price: sort === 'desc' ? -1 : 1 }); // Ordenar por precio
+  
+      const totalProducts =   Product.countDocuments(filter); // Obtener el total de productos
+      const totalPages = Math.ceil(totalProducts / limit); // Calcular el número total de páginas
+  
+      return {
+        status: 'success',
+        payload: products,
+        totalPages,
+        page,
+        hasPrevPage: page > 1,
+        hasNextPage: page < totalPages,
+        prevLink: page > 1 ? `/api/products?page=${page - 1}&limit=${limit}` : null,
+        nextLink: page < totalPages ? `/api/products?page=${page + 1}&limit=${limit}` : null,
+      };
+    } catch (error) {
+      console.error('Error al obtener los productos:', error);
+      throw error;
+    }
+  };
+  
 
   getProductById(id) {
     const product = this.products.find((p) => p.id === parseInt(id));
@@ -38,6 +70,18 @@ class productManager {
     }
     return product;
   }
+
+ addProduct =  (productData) => {
+    try {
+      const product = new Product(productData); // Crea una instancia del modelo
+        product.save(); // Guarda el producto en la base de datos
+      return product; // Devuelve el producto agregado
+    } catch (error) {
+      console.error('Error al agregar el producto:', error);
+      throw error;
+    }
+  };
+  
 
   modProduct(id, updatedProduct) {
     const productIndex = this.products.findIndex((p) => p.id === parseInt(id));
@@ -59,44 +103,20 @@ class productManager {
   }
 
   
-  deleteProduct(id) {
-    const productIndex = this.products.findIndex((p) => p.id === parseInt(id));
-    if (productIndex === -1) {
-      throw new Error(`Producto con ID ${id} no encontrado.`);
-    }
-
-    
-    this.products.splice(productIndex, 1);
-    console.log(`Producto con ID ${id} eliminado`);
-    this.save();
-  }
-
-  
-  addProduct(product) {
-    const requiredFields = ['title', 'description', 'code', 'price',  'stock', 'category', 'thumbnails'];
-  
-   
-    for (const field of requiredFields) {
-      if (!product[field]) {
-        throw new Error(`El campo "${field}" es obligatorio.`);
+    deleteProduct =   (id) => {
+    try {
+      const result =   Product.findByIdAndDelete(id); // Elimina el producto por su ID
+      if (!result) {
+        throw new Error('Producto no encontrado');
       }
+      return result; // Devuelve el producto eliminado
+    } catch (error) {
+      console.error('Error al eliminar el producto:', error);
+      throw error;
     }
+  };
   
-   
-    const existingProduct = this.products.find(p => p.code === product.code);
-    if (existingProduct) {
-      throw new Error(`El código "${product.code}" ya está en uso.`);
-    }
-  
-   
-    const newId = this.products.length ? this.products[this.products.length - 1].id + 1 : 1;
-    const newProduct = { id: newId, ...product };
-    this.products.push(newProduct);
-    this.save();
-    console.log(`Producto agregado:`, newProduct);
-    return newProduct;
-  }
-  
+ 
 }
 
 export default new productManager();
