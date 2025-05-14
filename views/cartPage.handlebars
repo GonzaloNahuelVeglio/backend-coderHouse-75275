@@ -1,0 +1,15 @@
+<h1>Tu Carrito</h1>
+{{#if cart.products}}
+  <ul>
+    {{#each cart.products}}
+      <li>
+        Producto: {{this.productId.title}} - Cantidad: {{this.quantity}} - Precio: ${{this.productId.price}}
+        <button>Eliminar</button>
+        <!-- Puedes agregar más botones para modificar la cantidad o eliminar productos -->
+      </li>
+    {{/each}}
+  </ul>
+  <button>Vaciar carrito</button> <!-- Opcional, si quieres una opción para vaciar el carrito -->
+{{else}}
+  <p>No hay productos en tu carrito.</p>
+{{/if}}

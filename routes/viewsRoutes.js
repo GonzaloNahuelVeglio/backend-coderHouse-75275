@@ -1,4 +1,5 @@
-import express from 'express'; 
+import express from 'express';
+import Cart from '../models/carts.js'; 
 import * as productManager from '../managers/productManager.js';
 import Product from '../models/products.js'; // <-- AGREGA ESTA LÍNEA
 const router = express.Router();
@@ -34,6 +35,35 @@ router.get('/product/:id', async (req, res) => {
 router.get('/realtimeproducts', async (req, res) => {
   const products = await productManager.getProducts({});
   res.render('realTimeProducts', { products });
+});
+
+
+// Ruta para ver el carrito
+router.get('/cart/:cid', async (req, res) => {
+  const { cid } = req.params;
+  try {
+    const cart = await Cart.findById(cid).populate('products.productId');
+    if (!cart) {
+      return res.status(404).render('error', { message: 'Carrito no encontrado' });
+    }
+    res.render('cartPage', { cart });  // Renderiza la vista del carrito con los productos
+  } catch (error) {
+    res.status(500).render('error', { message: 'Error al obtener el carrito' });
+  }
+});
+
+// Ruta para redirigir al carrito (si no existe, lo creamos)
+router.get('/cart', async (req, res) => {
+  try {
+    let cart = await Cart.findOne({}); // Si deseas un solo carrito para todos los usuarios, usa este
+    if (!cart) {
+      cart = new Cart();
+      await cart.save();  // Si no existe un carrito, lo creamos
+    }
+    res.redirect(`/cart/${cart._id}`);  // Redirige al carrito creado o existente
+  } catch (error) {
+    res.status(500).json({ message: 'Error al redirigir al carrito', error: error.message });
+  }
 });
 
 export default router;

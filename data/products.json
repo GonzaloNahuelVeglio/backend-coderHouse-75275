@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1,
+    "title": "Teclado Mecánico RGB",
+    "description": "Teclado mecánico con retroiluminación RGB, switches azules.",
+    "code": "KB-RGB-001",
+    "price": 17000,
+    "stock": 300,
+    "category": "Periféricos",
+    "thumbnails": "/images/teclado.webp"
+  },
+  {
+    "id": 2,
+    "title": "Mouse Gamer Inalámbrico",
+    "description": "Mouse ergonómico inalámbrico con sensor óptico de alta precisión.",
+    "code": "MS-GAM-002",
+    "price": 12000,
+    "stock": 45,
+    "category": "Periféricos",
+    "thumbnails": "/images/mouse.webp"
+  },
+  {
+    "id": 3,
+    "title": "Monitor LED 24'' Full HD",
+    "description": "Monitor LED de 24 pulgadas, resolución 1920x1080, HDMI y VGA.",
+    "code": "MON-HD-003",
+    "price": 45000,
+    "stock": 20,
+    "category": "Monitores",
+    "thumbnails": "/images/monitor.webp"
+  },
+  {
+    "id": 4,
+    "title": "Laptop Intel i5 11va Gen",
+    "description": "Notebook con procesador Intel Core i5, 8GB RAM y SSD de 256GB.",
+    "code": "NB-I5-004",
+    "price": 250000,
+    "stock": 10,
+    "category": "Laptops",
+    "thumbnails": "/images/laptop.webp"
+  },
+  {
+    "id": 5,
+    "title": "Auriculares con Micrófono",
+    "description": "Auriculares estéreo con micrófono integrado y cable de 2m.",
+    "code": "AUD-MIC-005",
+    "price": 8000,
+    "stock": 60,
+    "category": "Audio",
+    "thumbnails": "/images/auricular.webp"
+  },
+  {
+    "id": 6,
+    "title": "Disco SSD 1TB SATA III",
+    "description": "Unidad de estado sólido de 1TB, velocidad de lectura de 550MB/s.",
+    "code": "SSD-1TB-006",
+    "price": 60000,
+    "stock": 25,
+    "category": "Almacenamiento",
+    "thumbnails": "/images/disco_ssd.webp"
+  },
+  {
+    "id": 7,
+    "title": "Memoria RAM 16GB DDR4",
+    "description": "Módulo de memoria RAM DDR4 de 16GB, 3200MHz.",
+    "code": "RAM-16GB-007",
+    "price": 22000,
+    "stock": 40,
+    "category": "Componentes",
+    "thumbnails": "/images/memoria_ram.webp"
+  },
+  {
+    "id": 10,
+    "title": "Parlante",
+    "price": "444",
+    "code": "123asdaa12",
+    "description": "es un parlante",
+    "stock": "213",
+    "category": "audio",
+    "thumbnails": "/images/parlante.webp"
+  },
+  {
+    "id": 11,
+    "title": "Parlante caro",
+    "price": 8500,
+    "code": "PAR-123-TE",
+    "description": "Este parlante es igual al anterior pero de otro color",
+    "stock": 50,
+    "category": "componentes",
+    "thumbnails": "/images/parlante.webp"
+  },
+  {
+    "id": 12,
+    "title": "Monitor 150\"",
+    "price": "1234",
+    "code": "MON-56s8-TOR",
+    "description": "monitor",
+    "stock": "123",
+    "category": "monitores",
+    "thumbnails": "/images/1745958329492.webp"
+  },
+  {
+    "id": 13,
+    "title": "Monitor 150\"",
+    "price": "1234",
+    "code": "MOSN-568-TOR",
+    "description": "asdasdasdasdasd",
+    "stock": "33",
+    "category": "laptops",
+    "thumbnails": "/images/1745969088826.webp"
+  },
+  {
+    "id": 14,
+    "title": "Silla Gamer",
+    "price": "3500000",
+    "code": "SILLA009",
+    "description": "La silla gamer negra para oficina es la solución ideal para quienes buscan máxima comodidad y estilo en su espacio de trabajo o juego. Diseñada para gamers, youtubers y profesionales que pasan largas horas frente al escritorio, esta silla ofrece un soporte ergonómico superior y una experiencia de sentado de lujo.",
+    "stock": "120",
+    "category": "componentes",
+    "thumbnails": "/images/1745969210045.webp"
+  }
+]

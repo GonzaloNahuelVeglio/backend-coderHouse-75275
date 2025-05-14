@@ -10,7 +10,7 @@ import connectDB from './db/connect.js';
 import productRoutes from './routes/productRoutes.js';
 import cartRoutes from './routes/cartRoutes.js';
 import viewsRoutes from './routes/viewsRoutes.js';
-import socketHandler from './socketHandler.js';
+import socketHandler from './socketHandler.js'; 
 
 
 
