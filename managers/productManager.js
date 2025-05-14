@@ -1,122 +1,75 @@
-import fs from 'fs';
-const path = './data/products.json';
-import Product from '../models/products.js';
+import Product from '../models/products.js'; // Importar el modelo de MongoDB
 
-class productManager {
-  constructor() {
-    this.products = this.load();
+// Agregar un nuevo producto
+const addProduct = async (product) => {
+  try {
+    const newProduct = new Product(product); // Crear un nuevo producto con Mongoose
+    await newProduct.save(); // Guardar en MongoDB
+    console.log('Producto agregado:', newProduct);
+    return newProduct;
+  } catch (error) {
+    throw new Error('Error al agregar el producto');
   }
+};
 
-  load() {
-    try {
-      if (fs.existsSync(path)) {
-        const data = fs.readFileSync(path, 'utf-8');
-        return JSON.parse(data);
-      }
-      return [];
-    } catch (error) {
-      console.error('Error al cargar los productos:', error);
-      return [];
-    }
+const getProducts = async (queryParams) => {
+  try {
+    const { limit = 8, page = 1, sort = 'asc', query = '' } = queryParams; // Desestructurando query params
+
+    // Filtrar por categoría o disponibilidad (si se pasa)
+    const queryFilter = query ? { category: query } : {};
+
+    const products = await Product.find(queryFilter)
+      .limit(parseInt(limit)) // Limitar el número de resultados
+      .skip((parseInt(page) - 1) * parseInt(limit)) // Paginación
+      .sort({ price: sort === 'desc' ? -1 : 1 }) // Ordenamiento por precio (asc/desc)
+      .lean(); // Convertir a objeto plano
+
+    return products;
+  } catch (error) {
+    throw new Error('Error al obtener los productos');
   }
+};
 
-  save() {
-    try {
-      fs.writeFileSync(path, JSON.stringify(this.products, null, 2));
-    } catch (error) {
-      console.error('Error al guardar los productos:', error);
-    }
-  }
 
-   getProducts =   (limit = 10, page = 1, query = {}, sort = 'asc') => {
-    try {
-      const filter = {}; // Filtro de búsqueda (por ejemplo, categoría o disponibilidad)
-      if (query.category) {
-        filter.category = query.category;
-      }
-      if (query.available) {
-        filter.stock = { $gt: 0 }; // Filtrar solo productos disponibles
-      }
-  
-      const products =   Product.find(filter)
-        .skip((page - 1) * limit) // Paginación
-        .limit(Number(limit))     // Límite de productos por página
-        .sort({ price: sort === 'desc' ? -1 : 1 }); // Ordenar por precio
-  
-      const totalProducts =   Product.countDocuments(filter); // Obtener el total de productos
-      const totalPages = Math.ceil(totalProducts / limit); // Calcular el número total de páginas
-  
-      return {
-        status: 'success',
-        payload: products,
-        totalPages,
-        page,
-        hasPrevPage: page > 1,
-        hasNextPage: page < totalPages,
-        prevLink: page > 1 ? `/api/products?page=${page - 1}&limit=${limit}` : null,
-        nextLink: page < totalPages ? `/api/products?page=${page + 1}&limit=${limit}` : null,
-      };
-    } catch (error) {
-      console.error('Error al obtener los productos:', error);
-      throw error;
-    }
-  };
-  
-
-  getProductById(id) {
-    const product = this.products.find((p) => p.id === parseInt(id));
+// Obtener un producto por ID
+const getProductById = async (id) => {
+  try {
+    const product = await Product.findById(id).lean(); // Buscar por ID
     if (!product) {
-      return null;
+      throw new Error('Producto no encontrado');
     }
     return product;
+  } catch (error) {
+    throw new Error('Error al obtener el producto');
   }
+};
 
- addProduct =  (productData) => {
-    try {
-      const product = new Product(productData); // Crea una instancia del modelo
-        product.save(); // Guarda el producto en la base de datos
-      return product; // Devuelve el producto agregado
-    } catch (error) {
-      console.error('Error al agregar el producto:', error);
-      throw error;
+// Actualizar un producto por ID
+const modProduct = async (id, updatedProduct) => {
+  try {
+    const product = await Product.findByIdAndUpdate(id, updatedProduct, { new: true }); // Actualizar producto en MongoDB
+    if (!product) {
+      throw new Error('Producto no encontrado');
     }
-  };
-  
-
-  modProduct(id, updatedProduct) {
-    const productIndex = this.products.findIndex((p) => p.id === parseInt(id));
-    if (productIndex === -1) {
-      throw new Error(`Producto con ID ${id} no encontrado.`);
-    }
-
-    
-    const updatedFields = ['title', 'description', 'code', 'price',  'stock', 'category', 'thumbnails'];
-    for (const field of updatedFields) {
-      if (updatedProduct[field] !== undefined) {
-        this.products[productIndex][field] = updatedProduct[field];
-      }
-    }
-
-    this.save();
-    console.log(`Producto con ID ${id} modificado:`, this.products[productIndex]);
-    return this.products[productIndex];
+    return product;
+  } catch (error) {
+    throw new Error('Error al actualizar el producto');
   }
+};
 
-  
-    deleteProduct =   (id) => {
-    try {
-      const result =   Product.findByIdAndDelete(id); // Elimina el producto por su ID
-      if (!result) {
-        throw new Error('Producto no encontrado');
-      }
-      return result; // Devuelve el producto eliminado
-    } catch (error) {
-      console.error('Error al eliminar el producto:', error);
-      throw error;
+// Eliminar un producto por ID
+const deleteProduct = async (id) => {
+  try {
+    const product = await Product.findByIdAndDelete(id); // Eliminar producto
+    if (!product) {
+      throw new Error('Producto no encontrado');
     }
-  };
-  
- 
-}
+    console.log('Producto eliminado:', product);
+    return product;
+  } catch (error) {
+    throw new Error('Error al eliminar el producto');
+  }
+};
 
-export default new productManager();
+export { addProduct, getProducts, getProductById, modProduct, deleteProduct };

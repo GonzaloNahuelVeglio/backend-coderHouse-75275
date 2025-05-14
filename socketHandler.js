@@ -1,12 +1,12 @@
- import productManager from './managers/productManager.js';
+import { getProducts } from './managers/productManager.js'; // Agrega esta línea
 
 export default function socketHandler(io) {
   io.on('connection', (socket) => {
     console.log('Nuevo cliente conectado');
-    socket.emit('updateProducts', productManager.getProducts());
+    const products = getProducts({});
 
     socket.on('addProduct', (product) => {
-      try { 
+      try {
         productManager.addProduct(product);
         io.emit('updateProducts', productManager.getProducts());
       } catch (error) {
@@ -15,8 +15,12 @@ export default function socketHandler(io) {
     });
 
     socket.on('deleteProduct', (id) => {
-      productManager.deleteProduct(id);
-      io.emit('updateProducts', productManager.getProducts());
+      try {
+        productManager.deleteProduct(id);
+        io.emit('updateProducts', productManager.getProducts());
+      } catch (error) {
+        console.error('Error al eliminar producto:', error.message);
+      }
     });
 
     socket.on('disconnect', () => {

@@ -1,5 +1,4 @@
-import cartManager from '../managers/CartManager.js';
-
+ 
 const createCart = (req, res) => {
   try {
     const newCart = cartManager.createCart();
