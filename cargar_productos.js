@@ -1,15 +1,17 @@
 
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';  
-
+/*
+Codigo para cargar productos desde un archivo JSON a MongoDB
+Este script lee un archivo JSON con datos de productos y los inserta en una colección de MongoDB.
+*/
 dotenv.config();
 import fs from 'fs';
-import Product from './models/products.js'; // Asegúrate de tener el modelo de Product importado
+import Product from './models/products.js'; 
 
 const MONGO_USER = process.env.MONGO_DB_PASS;
 const MONGO_PASSWORD = process.env.MONGO_DB_USER;
-// const uri = `mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}@cluster0.9gsqupz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
- const uri = `mongodb+srv://gveglio:Coder57257@cluster0.9gsqupz.mongodb.net/tienda_online?retryWrites=true&w=majority&appName=Cluster0`;
+const uri = `mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}@cluster0.9gsqupz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`; 
 
 mongoose.connect(uri)
 .then(() => {
@@ -18,16 +20,16 @@ mongoose.connect(uri)
   console.error('Error al conectar a la base de datos', err);
 });
 
-// Leer los datos de productos
+
 const productsData = JSON.parse(fs.readFileSync('./data/products.json', 'utf-8'));
 
-// Insertar los productos en MongoDB
+
 const insertProducts = async () => {
   try {
-    // Elimina todos los productos existentes antes de insertar nuevos (si deseas limpiar la base de datos)
+    
     await Product.deleteMany({});
     
-    // Inserta los productos desde el archivo JSON
+    
     const result = await Product.insertMany(productsData);
     console.log('Productos insertados:', result);
   } catch (error) {
@@ -35,5 +37,5 @@ const insertProducts = async () => {
   }
 };
 
-// Llamar a la función para insertar los productos
+
 insertProducts();

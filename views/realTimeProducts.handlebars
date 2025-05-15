@@ -105,7 +105,7 @@ function addProduct() {
 
 
 function editProduct(productId) {
-  // Hacer una solicitud para obtener los detalles del producto
+  
   fetch(`/api/products/${productId}`)
     .then(response => response.json())
     .then(product => {
@@ -165,9 +165,9 @@ function editProduct(productId) {
           const category = document.getElementById('swal-category').value;
           const imageFile = document.getElementById('swal-image').files[0];
 
-          let imagePath = product.thumbnails; // Valor por defecto: la imagen actual
+          let imagePath = product.thumbnails; 
           
-          // Solo intentamos subir la imagen si se selecciona una nueva
+          
           if (imageFile) {
             const formData = new FormData();
             formData.append('image', imageFile);
@@ -178,13 +178,13 @@ function editProduct(productId) {
             })
             .then(response => response.json())
             .then(data => {
-              imagePath = data.imagePath;  // Actualizar la ruta de la imagen
+              imagePath = data.imagePath;  
               return { title, price, code, description, stock, category, thumbnails: imagePath };
             })
             .catch(err => Swal.showValidationMessage('Error al subir la imagen: ' + err));
           }
 
-          // Si no hay nueva imagen, simplemente devolvemos el producto con la imagen actual
+          
           return { title, price, code, description, stock, category, thumbnails: imagePath };
         }
       }).then((result) => {

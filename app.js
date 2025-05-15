@@ -41,25 +41,25 @@ const storage = multer.diskStorage({
 });
 app.post('/uploadImage', multer({ storage }).single('image'), (req, res) => {
   if (!req.file) {
-    return res.status(400).json({ message: 'No se ha subido ninguna imagen' }); // Cambié a una respuesta JSON
+    return res.status(400).json({ message: 'No se ha subido ninguna imagen' }); 
   }
   res.json({ imagePath: `/images/${req.file.filename}` });
 });
 
 
-// Helpers para Handlebars
+
 const hbsHelpers = {
   multiply: (a, b) => a * b,
   sum: (a, b) => a + b,
   totalQuantity: (products) => products.reduce((acc, item) => acc + item.quantity, 0),
   totalPrice: (products) => products.reduce((acc, item) => acc + (item.quantity * (item.productId?.price || 0)), 0),
-  eq: (a, b) => a === b  // Aquí agregamos el helper 'eq'
+  eq: (a, b) => a === b  
 };
 
-// Configuración de Handlebars
+
 app.engine('handlebars', engine({
   defaultLayout: 'main',
-  helpers: hbsHelpers  // Registra los helpers
+  helpers: hbsHelpers  
 }));
 app.set('view engine', 'handlebars');
 app.set('views', './views');
@@ -69,7 +69,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/carts', cartRoutes);
 app.use('/', viewsRoutes);
 
-// Conectar a la base de datos
+
 connectDB(); 
 socketHandler(io);
 

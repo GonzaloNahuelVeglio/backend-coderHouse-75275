@@ -1,5 +1,5 @@
 import * as productManager from './managers/productManager.js';
-import Cart from './models/carts.js';  // Asegúrate de importar el modelo Cart
+import Cart from './models/carts.js';  
 import Product from './models/products.js';
 
 export default function socketHandler(io) {
@@ -44,13 +44,13 @@ export default function socketHandler(io) {
         }
         const { products } = await productManager.getProducts({});
         io.emit('updateProducts', products);
-        socket.emit('productUpdated', updated);  // Emitir el producto actualizado
+        socket.emit('productUpdated', updated);  
       } catch (error) {
         socket.emit('error', { message: error.message });
       }
     });
 
-    // Crear un carrito nuevo
+    
     socket.on('createCart', async ({ productId, quantity }) => {
       try {
         const newCart = new Cart();
@@ -63,7 +63,7 @@ export default function socketHandler(io) {
       }
     });
 
-    // Agregar producto al carrito
+    
     socket.on('addProductToCart', async ({ cartId, productId, quantity }) => {
       try {
         const cart = await Cart.findById(cartId);

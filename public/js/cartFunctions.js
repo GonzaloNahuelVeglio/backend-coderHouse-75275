@@ -2,7 +2,7 @@ const socket = io();
 
 async function addToCart(productId) {
   let cartId = localStorage.getItem('cartId');
-  // Si no hay carrito, créalo
+  
   if (!cartId) {
     const res = await fetch('/api/carts', { method: 'POST' });
     if (!res.ok) {
@@ -14,7 +14,7 @@ async function addToCart(productId) {
     localStorage.setItem('cartId', cartId);
   }
 
-  // Agregar producto al carrito
+  
   const res = await fetch(`/api/carts/${cartId}/product/${productId}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -29,7 +29,7 @@ async function addToCart(productId) {
 }
 
 function removeProduct(productId) {
-  // Obtener el cartId desde localStorage
+  
   const cartId = localStorage.getItem('cartId');
   if (!cartId) {
     Swal.fire('Error', 'No se encontró el carrito', 'error');

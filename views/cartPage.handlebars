@@ -1,4 +1,4 @@
-<!-- Script original conservado -->
+
 <script src="../js/cartFunctions.js"></script>
 
 <div class="mx-auto bg-white shadow-lg rounded-lg overflow-hidden p-6 dark:bg-gray-900 dark:text-white">
@@ -6,7 +6,7 @@
   
   {{#if cart.products.length}}
     <div class="divide-y divide-gray-200 dark:divide-gray-700">
-      <!-- Encabezados de columnas -->
+      
       <div class="grid grid-cols-12 gap-4 py-2 font-semibold text-gray-600 dark:text-gray-300 mb-2 hidden md:grid">
         <div class="col-span-4">Producto</div>
         <div class="col-span-2 text-center">Cantidad</div>
@@ -15,11 +15,11 @@
         <div class="col-span-2 text-center">Acciones</div>
       </div>
       
-      <!-- Lista de productos -->
+      
       {{#each cart.products}}
         <div class="grid grid-cols-1 md:grid-cols-12 gap-4 py-4 items-center">
           {{#if this.productId}}
-            <!-- Producto disponible -->
+            
             <div class="col-span-1 md:col-span-4 flex flex-col">
               <span class="font-medium text-gray-600 dark:text-gray-300">{{this.productId.title}}</span>
               <span class="text-xs text-gray-700 mt-1">ID: {{this.productId._id}}</span>
@@ -46,13 +46,13 @@
               </button>
             </div>
           {{else}}
-            <!-- Producto no disponible -->
+            
             <div class="col-span-1 md:col-span-8">
               <span class="text-red-600 dark:text-red-400">Producto eliminado o no disponible</span>
               <span class="text-xs text-gray-400 ml-2">ID: {{this.productId}}</span>
             </div>
             <div class="col-span-1 md:col-span-2 text-right">
-              <!-- Columna vacía para mantener alineación -->
+              
             </div>
             <div class="col-span-1 md:col-span-2 flex justify-start md:justify-center">
               <button 
@@ -69,7 +69,7 @@
       {{/each}}
     </div>
     
-    <!-- Resumen y acciones -->
+    
     <div class="mt-8 flex flex-col sm:flex-row justify-between items-center pt-6 border-t dark:border-gray-700">
       <div class="mb-4 sm:mb-0">
         <button 

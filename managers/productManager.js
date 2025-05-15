@@ -1,10 +1,10 @@
-import Product from '../models/products.js'; // Importar el modelo de MongoDB
+import Product from '../models/products.js'; 
 
-// Agregar un nuevo producto
+
 const addProduct = async (product) => {
   try {
-    const newProduct = new Product(product); // Crear un nuevo producto con Mongoose
-    await newProduct.save(); // Guardar en MongoDB
+    const newProduct = new Product(product); 
+    await newProduct.save(); 
     console.log('Producto agregado:', newProduct);
     return newProduct;
   } catch (error) {
@@ -18,7 +18,7 @@ const getProducts = async (queryParams) => {
     limit = parseInt(limit);
     page = parseInt(page);
 
-    // Filtro por búsqueda
+    
     const filter = {}; 
     if (query) {
       filter.$or = [
@@ -28,16 +28,16 @@ const getProducts = async (queryParams) => {
     } 
 
     let sortOption = {};
-    if (sort === 'asc') sortOption.price = 1;  // Ordenar por precio ascendente
-    else if (sort === 'desc') sortOption.price = -1; // Ordenar por precio descendente
-    else if (sort === 'category') sortOption.category = 1; // Ordenar por categoría ascendente
-    else if (sort === 'name') sortOption.title = 1; // Ordenar por nombre ascendente
+    if (sort === 'asc') sortOption.price = 1;  
+    else if (sort === 'desc') sortOption.price = -1; 
+    else if (sort === 'category') sortOption.category = 1; 
+    else if (sort === 'name') sortOption.title = 1; 
 
-    // Contar productos según filtro
+    
     const totalProducts = await Product.countDocuments(filter);
     const totalPages = Math.ceil(totalProducts / limit);
 
-    // Obtener productos con filtro y ordenación
+    
     const products = await Product.find(filter)
       .limit(limit)
       .skip((page - 1) * limit)
@@ -61,10 +61,10 @@ const getProducts = async (queryParams) => {
 };
 
 
-// Obtener un producto por ID
+
 const getProductById = async (id) => {
   try {
-    const product = await Product.findById(id).lean(); // Buscar por ID
+    const product = await Product.findById(id).lean(); 
     if (!product) {
       throw new Error('Producto no encontrado');
     }
@@ -74,10 +74,10 @@ const getProductById = async (id) => {
   }
 };
 
-// Actualizar un producto por ID
+
 const modProduct = async (id, updatedProduct) => {
   try {
-    const product = await Product.findByIdAndUpdate(id, updatedProduct, { new: true }); // Actualizar producto en MongoDB
+    const product = await Product.findByIdAndUpdate(id, updatedProduct, { new: true }); 
     if (!product) {
       throw new Error('Producto no encontrado');
     }
@@ -87,10 +87,10 @@ const modProduct = async (id, updatedProduct) => {
   }
 };
 
-// Eliminar un producto por ID
+
 const deleteProduct = async (id) => {
   try {
-    const product = await Product.findByIdAndDelete(id); // Eliminar producto
+    const product = await Product.findByIdAndDelete(id); 
     if (!product) {
       throw new Error('Producto no encontrado');
     }
