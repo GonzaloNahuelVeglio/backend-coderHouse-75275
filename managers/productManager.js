@@ -14,23 +14,43 @@ const addProduct = async (product) => {
 
 const getProducts = async (queryParams) => {
   try {
-    const { limit = 8, page = 1, sort = 'asc', query = '' } = queryParams; // Desestructurando query params
-
-    // Filtrar por categoría o disponibilidad (si se pasa)
-    const queryFilter = query ? { category: query } : {};
-
-    const products = await Product.find(queryFilter)
-      .limit(parseInt(limit)) // Limitar el número de resultados
-      .skip((parseInt(page) - 1) * parseInt(limit)) // Paginación
-      .sort({ price: sort === 'desc' ? -1 : 1 }) // Ordenamiento por precio (asc/desc)
-      .lean(); // Convertir a objeto plano
-
-    return products;
+    let { limit = 8, page = 1, sort, query } = queryParams;
+    limit = parseInt(limit);
+    page = parseInt(page);
+    const filter = {};
+    // Permitir buscar por categoría o disponibilidad
+    if (query) {
+      if (query === 'disponibles') {
+        filter.stock = { $gt: 0 };
+      } else {
+        filter.category = query;
+      }
+    }
+    let sortOption = {};
+    if (sort === 'asc') sortOption.price = 1;
+    else if (sort === 'desc') sortOption.price = -1;
+    // Contar total de productos según filtro
+    const totalProducts = await Product.countDocuments(filter);
+    const totalPages = Math.ceil(totalProducts / limit);
+    const products = await Product.find(filter)
+      .limit(limit)
+      .skip((page - 1) * limit)
+      .sort(sortOption)
+      .lean();
+    return {
+      products,
+      totalPages,
+      page,
+      hasPrevPage: page > 1,
+      hasNextPage: page < totalPages,
+      prevPage: page > 1 ? page - 1 : null,
+      nextPage: page < totalPages ? page + 1 : null,
+      totalProducts
+    };
   } catch (error) {
     throw new Error('Error al obtener los productos');
   }
 };
-
 
 // Obtener un producto por ID
 const getProductById = async (id) => {

@@ -1,29 +1,27 @@
 import Product from '../models/products.js';
+import * as productManager from '../managers/productManager.js';
 
 const getProducts = async (req, res) => {
   try {
-    const { limit = 8, page = 1 , sort, query } = req.query;
-    const products = await productManager.getProducts({ limit, page, sort, query });
-
-    // Obtener el total de productos para calcular la cantidad de páginas
-    const totalProducts = await Product.countDocuments();
-    const totalPages = Math.ceil(totalProducts / limit);
-
+    const { limit = 8, page = 1, sort, query } = req.query;
+    const result = await productManager.getProducts({ limit, page, sort, query });
+    const { products, totalPages, hasPrevPage, hasNextPage, prevPage, nextPage } = result;
     res.json({
       status: 'success',
       payload: products,
       totalPages,
-      page: page,
-      hasPrevPage: page > 1,
-      hasNextPage: page < totalPages,
-      prevLink: page > 1 ? `/api/products?page=${page - 1}` : null,
-      nextLink: page < totalPages ? `/api/products?page=${page + 1}` : null,
+      page: Number(page),
+      hasPrevPage,
+      hasNextPage,
+      prevPage,
+      nextPage,
+      prevLink: hasPrevPage ? `/api/products?page=${prevPage}&limit=${limit}${sort ? `&sort=${sort}` : ''}${query ? `&query=${query}` : ''}` : null,
+      nextLink: hasNextPage ? `/api/products?page=${nextPage}&limit=${limit}${sort ? `&sort=${sort}` : ''}${query ? `&query=${query}` : ''}` : null
     });
   } catch (error) {
-    res.status(500).json({ message: 'Error al obtener productos', error: error.message });
+    res.status(500).json({ status: 'error', message: 'Error al obtener productos', error: error.message });
   }
 };
-
 
 const getProductById = async (req, res) => {
   const { pid } = req.params;

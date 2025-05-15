@@ -25,7 +25,18 @@ const io = new Server(http);
 app.use(express.static('public'));
 app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
  
-app.engine('handlebars', engine({ defaultLayout: 'main' }));
+// Helpers para Handlebars
+const hbsHelpers = {
+  multiply: (a, b) => a * b,
+  sum: (a, b) => a + b,
+  totalQuantity: (products) => products.reduce((acc, item) => acc + item.quantity, 0),
+  totalPrice: (products) => products.reduce((acc, item) => acc + (item.quantity * (item.productId?.price || 0)), 0)
+};
+
+app.engine('handlebars', engine({
+  defaultLayout: 'main',
+  helpers: hbsHelpers
+}));
 app.set('view engine', 'handlebars');
 app.set('views', './views');
 
@@ -39,7 +50,9 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
 });
 app.post('/uploadImage', multer({ storage }).single('image'), (req, res) => {
-  if (!req.file) return res.status(400).send('No se ha subido ninguna imagen');
+  if (!req.file) {
+    return res.status(400).json({ message: 'No se ha subido ninguna imagen' }); // Cambié a una respuesta JSON
+  }
   res.json({ imagePath: `/images/${req.file.filename}` });
 });
 
