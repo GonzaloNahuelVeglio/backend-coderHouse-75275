@@ -11,32 +11,39 @@ const addProduct = async (product) => {
     throw new Error('Error al agregar el producto');
   }
 };
-
+ 
 const getProducts = async (queryParams) => {
   try {
     let { limit = 8, page = 1, sort, query } = queryParams;
     limit = parseInt(limit);
     page = parseInt(page);
-    const filter = {};
-    // Permitir buscar por categoría o disponibilidad
+
+    // Filtro por búsqueda
+    const filter = {}; 
     if (query) {
-      if (query === 'disponibles') {
-        filter.stock = { $gt: 0 };
-      } else {
-        filter.category = query;
-      }
-    }
+      filter.$or = [
+        { title: { $regex: query, $options: 'i' } },
+        { category: { $regex: query, $options: 'i' } }
+      ];
+    } 
+
     let sortOption = {};
-    if (sort === 'asc') sortOption.price = 1;
-    else if (sort === 'desc') sortOption.price = -1;
-    // Contar total de productos según filtro
+    if (sort === 'asc') sortOption.price = 1;  // Ordenar por precio ascendente
+    else if (sort === 'desc') sortOption.price = -1; // Ordenar por precio descendente
+    else if (sort === 'category') sortOption.category = 1; // Ordenar por categoría ascendente
+    else if (sort === 'name') sortOption.title = 1; // Ordenar por nombre ascendente
+
+    // Contar productos según filtro
     const totalProducts = await Product.countDocuments(filter);
     const totalPages = Math.ceil(totalProducts / limit);
+
+    // Obtener productos con filtro y ordenación
     const products = await Product.find(filter)
       .limit(limit)
       .skip((page - 1) * limit)
       .sort(sortOption)
       .lean();
+
     return {
       products,
       totalPages,
@@ -48,9 +55,11 @@ const getProducts = async (queryParams) => {
       totalProducts
     };
   } catch (error) {
+    console.error('Error real:', error);
     throw new Error('Error al obtener los productos');
   }
 };
+
 
 // Obtener un producto por ID
 const getProductById = async (id) => {

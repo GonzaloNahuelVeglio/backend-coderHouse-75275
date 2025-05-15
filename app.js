@@ -11,7 +11,8 @@ import productRoutes from './routes/productRoutes.js';
 import cartRoutes from './routes/cartRoutes.js';
 import viewsRoutes from './routes/viewsRoutes.js';
 import socketHandler from './socketHandler.js'; 
-
+import { mongo } from 'mongoose';
+ 
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -25,18 +26,7 @@ const io = new Server(http);
 app.use(express.static('public'));
 app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
  
-// Helpers para Handlebars
-const hbsHelpers = {
-  multiply: (a, b) => a * b,
-  sum: (a, b) => a + b,
-  totalQuantity: (products) => products.reduce((acc, item) => acc + item.quantity, 0),
-  totalPrice: (products) => products.reduce((acc, item) => acc + (item.quantity * (item.productId?.price || 0)), 0)
-};
-
-app.engine('handlebars', engine({
-  defaultLayout: 'main',
-  helpers: hbsHelpers
-}));
+  
 app.set('view engine', 'handlebars');
 app.set('views', './views');
 
@@ -56,15 +46,31 @@ app.post('/uploadImage', multer({ storage }).single('image'), (req, res) => {
   res.json({ imagePath: `/images/${req.file.filename}` });
 });
 
- 
+
+// Helpers para Handlebars
+const hbsHelpers = {
+  multiply: (a, b) => a * b,
+  sum: (a, b) => a + b,
+  totalQuantity: (products) => products.reduce((acc, item) => acc + item.quantity, 0),
+  totalPrice: (products) => products.reduce((acc, item) => acc + (item.quantity * (item.productId?.price || 0)), 0),
+  eq: (a, b) => a === b  // Aquí agregamos el helper 'eq'
+};
+
+// Configuración de Handlebars
+app.engine('handlebars', engine({
+  defaultLayout: 'main',
+  helpers: hbsHelpers  // Registra los helpers
+}));
+app.set('view engine', 'handlebars');
+app.set('views', './views');
+
+
 app.use('/api/products', productRoutes);
 app.use('/api/carts', cartRoutes);
 app.use('/', viewsRoutes);
 
 // Conectar a la base de datos
-connectDB();
-
- 
+connectDB(); 
 socketHandler(io);
 
 http.listen(8080, () => {
